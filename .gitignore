@@ -1,0 +1,10 @@
+# Ignore specific files
+# file1.txt
+
+# Ignore files in a specific directory
+__pycache__/
+.vscode/
+particle.dSYM/Contents
+
+# Ignore files with a specific extension
+# *.log
