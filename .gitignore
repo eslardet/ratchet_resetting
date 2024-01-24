@@ -4,7 +4,7 @@
 # Ignore files in a specific directory
 __pycache__/
 .vscode/
-particle.dSYM/Contents
+particle.dSYM/
 
 # Ignore files with a specific extension
 # *.log
