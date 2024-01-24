@@ -1,5 +1,5 @@
 # Ignore specific files
-# file1.txt
+test.py
 
 # Ignore files in a specific directory
 __pycache__/
