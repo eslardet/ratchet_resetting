@@ -18,6 +18,7 @@ int samples, steps_total, steps_save, seed;
 
 // Function declarations
 void initialize(int argc, char **argv);
+void save_position(int current_t, float pos, char phase);
 
 // Main class of functions acting on the particle
 class Particle {
@@ -110,9 +111,9 @@ void initialize(int argc, char **argv) {
 
 }
 
-void save_position(int current_t, float pos) {
+void save_position(int current_t, float pos, char phase) {
     std::fstream output_file;
-    output_file.open("pos_" + to_string(current_t), ios::app);
+    output_file.open(to_string(phase) + "_pos_" + to_string(current_t), ios::app);
     output_file << pos << endl;
     output_file.close();
 }
@@ -122,12 +123,16 @@ int main(int argc, char **argv) {
     initialize(argc, argv);
 
     // Open output files
-    for (int i = 0; i < total_time; i += dt_save) {
-        std::fstream output_file;
-        output_file.open("pos_" + to_string(i), ios::out);
-        if (output_file.fail())
-        {cerr << "Can't open output file!" << endl; exit(1);}
-        output_file.close();
+    char phases[] = {'d', 'r'};
+    for (int i = 0; i <= total_time; i += dt_save) {
+        for (int j = 0; j < 2; j++) {
+            char p = phases[j];
+            std::fstream output_file;
+            output_file.open(to_string(p) + "_pos_" + to_string(i), ios::out);
+            if (output_file.fail())
+            {cerr << "Can't open output file!" << endl; exit(1);}
+            output_file.close();
+        }
     }
 
     rnd_gen.seed (seed);
@@ -139,7 +144,7 @@ int main(int argc, char **argv) {
         for (int i = 0; i <= steps_total; i++) {
             if (i % steps_save == 0) {
                 current_t = i * dt;
-                save_position(current_t, particle.x);
+                save_position(current_t, particle.x, particle.phase);
             }
             particle.move();
         }
