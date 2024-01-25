@@ -3,7 +3,6 @@
 #include <random>
 #include <cmath>
 #include <time.h>
-// #include "ratchet_reset.h"
 
 using namespace std;
 
