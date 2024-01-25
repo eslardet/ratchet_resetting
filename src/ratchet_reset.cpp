@@ -113,7 +113,8 @@ void initialize(int argc, char **argv) {
 
 void save_position(int current_t, float pos, char phase) {
     std::fstream output_file;
-    output_file.open(to_string(phase) + "_pos_" + to_string(current_t), ios::app);
+    std::string p = string(1,phase);
+    output_file.open(p + "_pos_" + to_string(current_t), ios::app);
     output_file << pos << endl;
     output_file.close();
 }
@@ -123,12 +124,12 @@ int main(int argc, char **argv) {
     initialize(argc, argv);
 
     // Open output files
-    char phases[] = {'d', 'r'};
+    char phases[2] = {'d', 'r'};
     for (int i = 0; i <= total_time; i += dt_save) {
         for (int j = 0; j < 2; j++) {
-            char p = phases[j];
+            std::string p = string(1, phases[j]);
             std::fstream output_file;
-            output_file.open(to_string(p) + "_pos_" + to_string(i), ios::out);
+            output_file.open(p + "_pos_" + to_string(i), ios::out);
             if (output_file.fail())
             {cerr << "Can't open output file!" << endl; exit(1);}
             output_file.close();
