@@ -14,8 +14,8 @@ uniform_real_distribution<double> uniDist(0.0,1.0);
 normal_distribution<double> whiteNoise(0.0,1.0);
 
 // Global variables
-double L, a, h, D, r, x0, dt, t, total_time;
-int samples, steps, seed;
+double L, a, h, D, r, x0, dt, dt_save, t, total_time;
+int samples, steps_total, steps_save, seed;
 
 // Function declarations
 void initialize(int argc, char **argv);
@@ -34,7 +34,7 @@ public:
     }
     
     void pbc_wrap() {
-        x = fmod(x, L);
+        x = x - L*floor(x/L);
     }
     
     double get_force() {
@@ -93,47 +93,60 @@ void initialize(int argc, char **argv) {
     input_file >> r;
     input_file >> x0;
     input_file >> dt;
+    input_file >> dt_save;
     input_file >> total_time;
     input_file >> samples;
     input_file >> seed;
     input_file.close();
 
-    steps = total_time / dt;
+    steps_total = total_time / dt;
+    steps_save = dt_save / dt;
 
     cout << "Initializing parameters..." << endl;
     cout << "L = " << L << ", a = " << a << ", h = " << h << endl;
     cout << "D = " << D << ", r = " << r << ", x0 = " << x0 << endl;
-    cout << "dt = " << dt << ", total_time = " << total_time << ", steps = " << steps << endl;
+    cout << "dt = " << dt << ", total_time = " << total_time << ", dt_save = " << dt_save << endl;
+    cout << "total steps = " << steps_total << ", save every " << steps_save << " steps" << endl;
     cout << "seed = " << seed << ", samples = " << samples << endl;
 
 }
 
-void save_position(std::fstream& File, float pos) {
-    File << pos << endl;
+void save_position(int current_t, float pos) {
+    std::fstream output_file;
+    output_file.open("pos_" + to_string(current_t), ios::app);
+    output_file << pos << endl;
+    output_file.close();
 }
 
 int main(int argc, char **argv) {
 
     initialize(argc, argv);
 
-    // Open output file
-    std::fstream output_file;
-    output_file.open("final_pos",ios::out);
-    if (output_file.fail())
-    {cerr << "Can't open output file!" << endl; exit(1);}
+    // Open output files
+    for (int i = 0; i < total_time; i += dt_save) {
+        std::fstream output_file;
+        output_file.open("pos_" + to_string(i), ios::out);
+        if (output_file.fail())
+        {cerr << "Can't open output file!" << endl; exit(1);}
+        output_file.close();
+    }
 
     rnd_gen.seed (seed);
 
     // Main simulation loop
+    int current_t = 0;
     for (int n = 0; n < samples; n++) {
         Particle particle;
-        for (int i = 0; i < steps; i++) {
+        for (int i = 0; i <= steps_total; i++) {
+            if (i % steps_save == 0) {
+                current_t = i * dt;
+                save_position(current_t, particle.x);
+            }
             particle.move();
         }
-        output_file << particle.x << endl;
     }
 
-    output_file.close();
+    
 
     return 0;
 }
