@@ -5,7 +5,6 @@ test.py
 # Ignore files in a specific directory
 __pycache__/
 .vscode/
-particle.dSYM/
 simulation_data/
 
 # Ignore files with a specific extension
