@@ -1,3 +1,4 @@
 #!/bin/sh
 
-rsync -rvltoD /Users/el2021/Code/ratchet_resetting el2021@login.hpc.ic.ac.uk:/rds/general/user/el2021/home
+rsync -rvltoD /Users/el2021/Code/ratchet_resetting/src/ratchet_reset.cpp el2021@login.hpc.ic.ac.uk:/rds/general/user/el2021/home/ratchet_resetting/src
+rsync -rvltoD /Users/el2021/Code/ratchet_resetting/run el2021@login.hpc.ic.ac.uk:/rds/general/user/el2021/home/ratchet_resetting
