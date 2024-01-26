@@ -140,6 +140,8 @@ int main(int argc, char **argv) {
 
     // Main simulation loop
     int current_t = 0;
+    cout << "Starting simulation ..." << endl;
+    cout << "Progress: " << flush;
     for (int n = 0; n < samples; n++) {
         Particle particle;
         for (int i = 0; i <= steps_total; i++) {
@@ -148,6 +150,9 @@ int main(int argc, char **argv) {
                 save_position(current_t, particle.x, particle.phase);
             }
             particle.move();
+        }
+        if ((n+1) % int(floor(samples / 10)) == 0) {
+            cout << "|" << flush;
         }
     }
 
