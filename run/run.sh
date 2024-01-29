@@ -4,14 +4,14 @@ src_dir=$HOME/Code/ratchet_resetting/src
 
 ## Parameters
 L=1
-a=0.2
+a=0.4
 h=1
 D=0.1
 r=0.2
 
 x0=0
 dt=0.001
-dt_save=1
+dt_save=40
 t=20
 samples=$((10 ** 6))
 seed=1
@@ -46,4 +46,4 @@ echo ${seed} >> 'inpar'
 
 time ${src_dir}/ratchet_reset inpar
 
-echo "Simulation completed."
+printf "\nSimulation completed."

@@ -46,4 +46,4 @@ echo ${seed} >> 'inpar'
 
 time ${src_dir}/ratchet_reset_hpc inpar
 
-echo "Simulation completed."
+printf "\nSimulation completed."
