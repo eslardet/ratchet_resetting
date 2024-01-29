@@ -6,6 +6,7 @@ test.py
 __pycache__/
 .vscode/
 simulation_data/
+plots/
 
 # Ignore files with a specific extension
 *.dSYM
