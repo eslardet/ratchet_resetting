@@ -4,16 +4,16 @@ src_dir=$HOME/Code/ratchet_resetting/src
 
 ## Parameters
 L=1
-a=0.4
+a=0.2
 h=1
 D=0.1
 r=0.2
 
 x0=0
 dt=0.001
-dt_save=40
-t=20
-samples=$((10 ** 6))
+dt_save=0.1
+t=1.0
+samples=$((10 ** 4))
 seed=1
 
 
