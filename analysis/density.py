@@ -66,21 +66,20 @@ def read_pos(file_name):
 
     return np.array(x_all)
 
+def get_prob_phase(h, a, D, r, t):
+    pos_file_d = get_pos_file(h, a, D, r, t, phase='d')
+    x_all_d = read_pos(pos_file_d)
+    pos_file_r = get_pos_file(h, a, D, r, t, phase='r')
+    x_all_r = read_pos(pos_file_r)
+
+    prob_d = len(x_all_d)/(len(x_all_d) + len(x_all_r))
+    prob_r = len(x_all_r)/(len(x_all_d) + len(x_all_r))
+
+    return prob_d, prob_r
+
 def plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, bins=20, save_plot=False, show_plot=True):
     """
-    Plot position of particle over time
-
-    Input
-    x_all : array of positions
-    h : height of potential
-    a_arr : locations of potential maximum
-    D : diffusion coefficient
-    r_arr : reset rates
-    t_arr : times to plot
-    phase : 'd' or 'r'
-
-    Returns
-    None
+    Plot position of particle over time/ array of a or r values for a certain phase
     """
     fig, ax = initalize_plotting(cols='continuous', num=len(a_arr)*len(r_arr)*len(t_arr))
     for a in a_arr:
@@ -88,11 +87,16 @@ def plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, bins=20, save_plot=False, s
             for t in t_arr:
                 pos_file = get_pos_file(h, a, D, r, t, phase)
                 x_all = read_pos(pos_file)
-                # ax.hist(x_all, bins=100, density=True)
 
+                prob_d, prob_r = get_prob_phase(h, a, D, r, t)
+                # ax.hist(x_all, bins=100, density=True)
+                if phase == 'd':
+                    prob = prob_d
+                elif phase == 'r':
+                    prob = prob_r
                 hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
                 bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-                ax.plot(bin_centers, hist, label=r'$a={a},\  r={r},\ t={t}$'.format(a=a, r=r, t=t))
+                ax.plot(bin_centers, prob*hist, label=r'$a={a},\  r={r},\ t={t}$'.format(a=a, r=r, t=str(float(t))))
 
     ax.set_xlim(0,1)
     ax.set_xlabel(r'$x$')
@@ -111,30 +115,27 @@ def plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, bins=20, save_plot=False, s
 
 def plot_pos_both(h, a, D, r, t, bins=20, save_plot=False, show_plot=True):
     """
-    Plot position of particle over time
-
-    Input
-    x_all : array of positions
-    h : height of potential
-    a : location of potential maximum
-    D : diffusion coefficient
-    r : reset rate
-    t : time
-
-    Returns
-    None
+    Plot position of particle over time for each phase
     """
 
     fig, ax = initalize_plotting(cols='discrete')
+
+    prob_d, prob_r = get_prob_phase(h, a, D, r, t)
     for phase in ['d', 'r']:
         pos_file = get_pos_file(h, a, D, r, t, phase)
         x_all = read_pos(pos_file)
+        
+        if phase == 'd':
+            prob = prob_d
+        elif phase == 'r':
+            prob = prob_r
         # ax.hist(x_all, bins=100, density=True)
         hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
         bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-        ax.plot(bin_centers, hist, label="Phase " + phase)
+        ax.plot(bin_centers, prob*hist, label="Phase " + phase)
 
-    ax.set_title(r'$a={a}, \ r={r}, \ t={t}$'.format(a=a, r=r, t=t))
+
+    ax.set_title(r'$a={a}, \ r={r}, \ t={t}$'.format(a=a, r=r, t=str(float(t))))
     ax.set_xlim(0,1)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$P(x)$')
@@ -152,18 +153,7 @@ def plot_pos_both(h, a, D, r, t, bins=20, save_plot=False, show_plot=True):
 
 def plot_pos_total(h, a_arr, D, r_arr, t_arr, bins=20, save_plot=False, show_plot=True):
     """
-    Plot position of particle over time
-
-    Input
-    x_all : array of positions
-    h : height of potential
-    a_arr : locations of potential maximum
-    D : diffusion coefficient
-    r_arr : reset rates
-    t : times to plot
-
-    Returns
-    None
+    Plot position of particle over time (combined phases)
     """
 
     fig, ax = initalize_plotting(cols='continuous', num=len(a_arr)*len(r_arr)*len(t_arr))
@@ -179,7 +169,7 @@ def plot_pos_total(h, a_arr, D, r_arr, t_arr, bins=20, save_plot=False, show_plo
 
                 hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
                 bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-                ax.plot(bin_centers, hist, label=r'$a={a}, \ r={r}, \ t={t}$'.format(a=a, r=r, t=t))
+                ax.plot(bin_centers, hist, label=r'$a={a}, \ r={r}, \ t={t}$'.format(a=a, r=r, t=str(float(t))))
 
     ax.set_xlim(0,1)
     ax.set_xlabel(r'$x$')
@@ -196,17 +186,5 @@ def plot_pos_total(h, a_arr, D, r_arr, t_arr, bins=20, save_plot=False, show_plo
     if show_plot:
         plt.show()
 
-h = 1
-a = 0.2
-a_arr = np.round(np.arange(0.1,0.6,0.1),1)
-D = 0.1
-r = 0.2
-r_arr = [0.2]
-t = 20
-t_arr = np.arange(20, 21, 1)
-phase = 'r'
 
-plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, save_plot=True, show_plot=False)
-# plot_pos_both(h, a, D, r, t, save_plot=True, show_plot=False)
-# plot_pos_total(h, a, D, r, t_arr)
 
