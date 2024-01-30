@@ -18,7 +18,7 @@ int samples, steps_total, steps_save, seed;
 
 // Function declarations
 void initialize(int argc, char **argv);
-void save_position(int current_t, float pos, char phase);
+void save_position(double current_t, double pos, char phase);
 
 // Main class of functions acting on the particle
 class Particle {
@@ -111,7 +111,7 @@ void initialize(int argc, char **argv) {
 
 }
 
-void save_position(int current_t, float pos, char phase) {
+void save_position(double current_t, double pos, char phase) {
     std::fstream output_file;
     std::string p = string(1,phase);
     output_file.open(p + "_pos_" + to_string(current_t), ios::app);
@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 
     // Open output files
     char phases[2] = {'d', 'r'};
-    for (int i = 0; i <= total_time; i += dt_save) {
+    for (double i = 0; i <= total_time; i += dt_save) {
         for (int j = 0; j < 2; j++) {
             std::string p = string(1, phases[j]);
             std::fstream output_file;
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
     rnd_gen.seed (seed);
 
     // Main simulation loop
-    int current_t = 0;
+    double current_t = 0;
     cout << "Starting simulation ..." << endl;
     cout << "Progress: " << flush;
     for (int n = 0; n < samples; n++) {
