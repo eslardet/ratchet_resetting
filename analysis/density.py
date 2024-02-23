@@ -1,4 +1,5 @@
 import os
+import csv
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -66,7 +67,7 @@ def read_pos(file_name):
 
     return np.array(x_all)
 
-def get_prob_phase(h, a, D, r, t):
+def get_prob_phase(h, a, D, r, t, phase='r'):
     pos_file_d = get_pos_file(h, a, D, r, t, phase='d')
     x_all_d = read_pos(pos_file_d)
     pos_file_r = get_pos_file(h, a, D, r, t, phase='r')
@@ -75,7 +76,10 @@ def get_prob_phase(h, a, D, r, t):
     prob_d = len(x_all_d)/(len(x_all_d) + len(x_all_r))
     prob_r = len(x_all_r)/(len(x_all_d) + len(x_all_r))
 
-    return prob_d, prob_r
+    if phase == 'd':
+        return prob_d
+    elif phase == 'r':
+        return prob_r
 
 def plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, bins=20, save_plot=False, show_plot=True):
     """
@@ -88,12 +92,8 @@ def plot_pos_phase(h, a_arr, D, r_arr, t_arr, phase, bins=20, save_plot=False, s
                 pos_file = get_pos_file(h, a, D, r, t, phase)
                 x_all = read_pos(pos_file)
 
-                prob_d, prob_r = get_prob_phase(h, a, D, r, t)
+                prob = get_prob_phase(h, a, D, r, t, phase)
                 # ax.hist(x_all, bins=100, density=True)
-                if phase == 'd':
-                    prob = prob_d
-                elif phase == 'r':
-                    prob = prob_r
                 hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
                 bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
                 ax.plot(bin_centers, prob*hist, label=r'$a={a},\  r={r},\ t={t}$'.format(a=a, r=r, t=str(float(t))))
@@ -120,15 +120,11 @@ def plot_pos_both(h, a, D, r, t, bins=20, save_plot=False, show_plot=True):
 
     fig, ax = initalize_plotting(cols='discrete')
 
-    prob_d, prob_r = get_prob_phase(h, a, D, r, t)
     for phase in ['d', 'r']:
         pos_file = get_pos_file(h, a, D, r, t, phase)
         x_all = read_pos(pos_file)
         
-        if phase == 'd':
-            prob = prob_d
-        elif phase == 'r':
-            prob = prob_r
+        prob = get_prob_phase(h, a, D, r, t, phase)
         # ax.hist(x_all, bins=100, density=True)
         hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
         bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
@@ -188,3 +184,56 @@ def plot_pos_total(h, a_arr, D, r_arr, t_arr, bins=20, save_plot=False, show_plo
 
 
 
+def read_csv(filename):
+    """
+    Read csv output for plotting
+    """
+    folder = os.path.abspath('./analytical_data/')
+    file = os.path.join(folder, filename)
+    x_plot = []
+    y_plot = []
+    with open(file) as f:
+        reader = csv.reader(f, delimiter=",")
+        for line in reader:
+            x_plot.append(float(line[0]))
+            y_plot.append(float(line[1]))
+    
+    return np.array(x_plot), np.array(y_plot)
+
+def plot_csv(filename, ax=None):
+    """
+    Plot csv output
+    """
+    x_plot, y_plot = read_csv(filename)
+    if ax is None:
+        fig, ax = initalize_plotting()
+    ax.plot(x_plot, y_plot)
+    # ax.set_xlim(0,1)
+    # ax.set_xlabel(r'$x$')
+    # ax.set_ylabel(r'$P(x)$')
+    
+    return ax
+
+def plot_compare(h, a, D, r, t, phase, bins=20, ax=None):
+    """
+    Plot analytical and simulation data
+    """
+    filename = 'P_{}_h{}_a{}_D{}_r{}.csv'.format(phase, h, a, D, r)
+    x_plot, y_plot = read_csv(filename)
+    if ax is None:
+        fig, ax = initalize_plotting()
+    ax.plot(x_plot, y_plot, label='Analytical')
+
+    pos_file = get_pos_file(h, a, D, r, t, phase)
+    x_all = read_pos(pos_file)
+    prob = get_prob_phase(h, a, D, r, t, phase)
+    
+    hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
+    bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
+    ax.plot(bin_centers, prob*hist, 'o', label='Simulation')
+    ax.set_xlim(0,1)
+    ax.set_xlabel(r'$x$')
+    ax.set_ylabel(r'$P(x)$')
+    ax.legend()
+    
+    return ax
