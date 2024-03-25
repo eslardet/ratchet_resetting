@@ -8,6 +8,8 @@ __pycache__/
 simulation_data/
 plots/
 old/
+analytical_data/
+Densities/
 
 # Ignore files with a specific extension
 *.dSYM
