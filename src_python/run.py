@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import time
 import os
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 import sys
 sys.path.append('./src')
@@ -37,7 +38,7 @@ plt.rc('legend', fontsize=small)    # legend fontsize
 
 matplotlib.rcParams["font.family"] = "serif"
 plt.rcParams['text.usetex'] = True
-plt.rcParams['axes.labelpad']=10
+plt.rcParams['axes.labelpad']=5
 
 phase_colors = {'d': 'tab:blue', 'r': 'tab:red'}
 
@@ -62,14 +63,21 @@ for i in range(num_steps):
         x_loc.append(particle.x)
         previous_x = particle.x
     else:
-        current_phase = particle.phase
         # t_plot = np.arange(last_t, particle.t, dt)
+        if dx < 0.5*L:
+            x_loc.append(particle.x)
+            print(particle.x)
+            print(particle.t)
+        elif L-previous_x < 0.1:
+            x_loc.append(L)
+        elif previous_x < 0.1:
+            x_loc.append(0)
         t_plot = np.linspace(last_t, particle.t, len(x_loc))
         ax.plot(t_plot, x_loc, color=phase_colors[current_phase])
         x_loc = [particle.x]
         last_t = particle.t
         previous_x = particle.x
-
+        current_phase = particle.phase
     particle.move()
 
 final_loc.append(particle.x)
@@ -85,15 +93,31 @@ print('Time taken: ', time.time() - t0)
 # t_plot = np.arange(0, total_t, dt)
 # ax.plot(t_plot, x_loc)
 
+ax.hlines(a, 0, total_t, color='black', linestyle='--', alpha=0.2, linewidth=5)
+
 ax.set_xlabel(r'$t$')
 ax.set_ylabel(r'$x$')
 ax.set_ylim(0, L)
-ax.set_xlim(0, total_t)
+ax.set_xlim(0.265, total_t)
 
-folder = 'plots/trajectory/'
+
+## Make custom ticks
+ax.set_xticks([])
+# ax.set_xticks(ax.get_xticks(), [0, '', '', '', '', ''])
+ax.set_yticks([0,1])
+ax.set_yticks(ax.get_yticks(), [0, 'L'])
+
+# ax.xaxis.set_minor_locator(MultipleLocator(0.2))
+# ax.yaxis.set_minor_locator(MultipleLocator(0.2))
+
+# plt.tick_params(left=False, right=False)
+
+folder = os.path.abspath('./plots/trajectory/')
 if not os.path.exists(folder):
     os.makedirs(folder)
 filename = 'L{}_a{}_h{}_D{}_r{}_seed{}'.format(L, a, h, D, r, seed)
-plt.savefig(folder + filename + '.pdf', bbox_inches='tight')
-
-# plt.show()
+plt.savefig(os.path.join(folder, filename + '.pdf'), bbox_inches='tight')
+plt.savefig(os.path.join(folder, filename + '.svg'), bbox_inches='tight')
+plt.savefig(os.path.join(folder, filename + '.png'), bbox_inches='tight')
+# print(os.path.join(folder, filename + '.png'))
+plt.show()
