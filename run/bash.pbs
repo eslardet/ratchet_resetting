@@ -1,8 +1,8 @@
 #!/bin/bash
-#PBS -lwalltime=08:00:00
+#PBS -lwalltime=72:00:00
 #PBS -lselect=1:ncpus=1:mem=1gb
-#PBS -N RR_time_test
-#PBS -J 0-44
+#PBS -N RR_precise_t10
+#PBS -J 0-9
 
 #PBS -o output/
 #PBS -e output/
@@ -12,20 +12,21 @@ num_a=5
 L=1
 
 a_arr=($(seq 0.1 0.1 0.5))
-a=${a_arr[$(($PBS_ARRAY_INDEX) % $num_a)]}
-# a=0.2
+a=${a_arr[$(($PBS_ARRAY_INDEX % $num_a))]}
+##a=0.2
 
 h=1
 D=0.1
 
-r_arr=($(seq 0.1 0.1 0.9))
-r=${r_arr[$(($PBS_ARRAY_INDEX) / $num_a)]}
-# r=0.2
+##r_arr=($(seq 0.1 0.1 0.9))
+r_arr=(0.2 1.0)
+r=${r_arr[$(($PBS_ARRAY_INDEX / $num_a))]}
+##r=0.2
 
 x0=0
-dt=0.001
-dt_save=1
-t=20
+dt=0.0001
+dt_save=10.0
+t=10.0
 samples=$((10 ** 6))
 seed=1
 
