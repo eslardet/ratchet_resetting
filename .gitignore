@@ -6,6 +6,7 @@ test.py
 __pycache__/
 .vscode/
 simulation_data/
+simulation_data_mfpt/
 plots/
 old/
 analytical_data/
