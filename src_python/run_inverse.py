@@ -40,10 +40,9 @@ matplotlib.rcParams["font.family"] = "serif"
 plt.rcParams['text.usetex'] = True
 plt.rcParams['axes.labelpad']=5
 
-# phase_colors = {'d': 'tab:blue', 'r': 'tab:red'}
-phase_colors = {'d': 'blue', 'r': 'red'}
+phase_colors = {'d': 'tab:blue', 'r': 'tab:red'}
 
-fig, ax = plt.subplots(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(8,10))
 
 
 
@@ -74,7 +73,7 @@ for i in range(num_steps):
         elif previous_x < 0.1:
             x_loc.append(0)
         t_plot = np.linspace(last_t, particle.t, len(x_loc))
-        ax.plot(t_plot, x_loc, color=phase_colors[current_phase])
+        ax.plot(x_loc, t_plot, color=phase_colors[current_phase])
         x_loc = [particle.x]
         last_t = particle.t
         previous_x = particle.x
@@ -85,7 +84,7 @@ final_loc.append(particle.x)
 
 
 t_plot = np.linspace(last_t, particle.t, len(x_loc))
-ax.plot(t_plot, x_loc, color=phase_colors[current_phase])
+ax.plot(x_loc, t_plot, color=phase_colors[current_phase])
 
 print('Time taken: ', time.time() - t0)
 
@@ -94,40 +93,37 @@ print('Time taken: ', time.time() - t0)
 # t_plot = np.arange(0, total_t, dt)
 # ax.plot(t_plot, x_loc)
 
-ax.hlines(a, 0, total_t, color='black', linestyle='--', alpha=0.2, linewidth=5)
+ax.vlines(a, 0, total_t, color='black', linestyle='--', alpha=0.2, linewidth=5)
 
-ax.set_xlabel(r'$t$')
-ax.set_ylabel(r'$x$')
-ax.set_ylim(0, L)
-# ax.set_xlim(0.265, total_t)
-ax.set_xlim(0, total_t)
+ax.set_ylabel(r'$t$')
+ax.set_xlabel(r'$x$')
+ax.set_xlim(0, L)
+ax.set_ylim(0, total_t)
+# ax.set_ylim(0.265, total_t)
 
 
 ## Make custom ticks
-# ax.set_xticks([])
+# ax.set_yticks([0,5])
 # ax.set_xticks(ax.get_xticks(), [0, '', '', '', '', ''])
-ax.set_yticks([0,1])
-ax.set_yticks(ax.get_yticks(), [0, r'$L$'])
+ax.set_xticks([0,0.5,1])
+ax.set_xticks(ax.get_xticks(), [0, r"$L/2$", r'$L$'])
+# ax.set_xticks([0,0.2,0.4,0.6,0.8,1])
+# ax.set_xticks(ax.get_xticks(), [0, r'$L/5$', r"$2L/5$", r"$3L/5$", r"$4L/5$", r'$L$'])
 
-# ax.xaxis.set_minor_locator(MultipleLocator(0.2))
-# ax.yaxis.set_minor_locator(MultipleLocator(0.2))
-
-# plt.tick_params(left=False, right=False)
-
-ax.yaxis.set_minor_locator(MultipleLocator(0.1))
-ax.xaxis.set_major_locator(MultipleLocator(1))
-ax.xaxis.set_minor_locator(MultipleLocator(0.5))
+ax.xaxis.set_minor_locator(MultipleLocator(0.1))
+ax.yaxis.set_major_locator(MultipleLocator(1))
+ax.yaxis.set_minor_locator(MultipleLocator(0.5))
 
 # plt.tick_params(left=False, right=False)
 
-# ax.plot((1.01), (0), ls="", marker=">", ms=10, color="k", transform=ax.get_yaxis_transform(), clip_on=False)
+ax.plot((0), (1.01), ls="", marker="^", ms=10, color="k", transform=ax.get_xaxis_transform(), clip_on=False)
 
 folder = os.path.abspath('./plots/trajectory/')
 if not os.path.exists(folder):
     os.makedirs(folder)
-filename = 'L{}_a{}_h{}_D{}_r{}_seed{}'.format(L, a, h, D, r, seed)
-# plt.savefig(os.path.join(folder, filename + '.pdf'), bbox_inches='tight')
-plt.savefig(os.path.join(folder, filename + '_bright.svg'), bbox_inches='tight')
-# plt.savefig(os.path.join(folder, filename + '_bright.png'), bbox_inches='tight')
-# # print(os.path.join(folder, filename + '.png'))
+filename = 'L{}_a{}_h{}_D{}_r{}_seed{}_inverse'.format(L, a, h, D, r, seed)
+plt.savefig(os.path.join(folder, filename + '.pdf'), bbox_inches='tight')
+plt.savefig(os.path.join(folder, filename + '.svg'), bbox_inches='tight')
+# plt.savefig(os.path.join(folder, filename + '.png'), bbox_inches='tight')
+# print(os.path.join(folder, filename + '.png'))
 # plt.show()

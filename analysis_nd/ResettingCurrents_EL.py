@@ -30,7 +30,7 @@ gamma_list = [0.0,0.2,0.5,0.0]
 bins = 20
 t = format(20.0, '.6f')
 
-color_dict = {'d': 'blue', 'r': 'red', 't': 'black'}
+color_dict = {'d': 'tab:blue', 'r': 'tab:red', 't': 'black'}
 symbol_dict = {'d': 'o', 'r': 's', 't': '^'}
 legend_dict = {'d': r'$\tilde{J}_D(x)$', 'r': r'$\tilde{J}_R(x)$', 't': r'$\tilde{J}$'}
 
@@ -84,6 +84,6 @@ plt.tight_layout()
 folder = os.path.abspath('./plots/current/')
 if not os.path.exists(folder):
     os.makedirs(folder)
-plt.savefig(folder + '/alpha{}_beta{}_gamma{}.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
+# plt.savefig(folder + '/alpha{}_beta{}_gamma{}.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
 
-# plt.show()
+plt.show()

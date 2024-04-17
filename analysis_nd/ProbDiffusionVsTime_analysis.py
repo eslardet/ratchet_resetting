@@ -61,7 +61,7 @@ for k in range(num_alpha):
     t_plot = [float(i) for i in t_arr]
     prob = r[3*k+2][0].split('\t')[:-1]
     prob_plot = [float(i) for i in prob]
-    ax.plot(t_plot, prob_plot, "-o", label=r"$\ell=" + str(alpha) + r"$")
+    ax.plot(t_plot, prob_plot, "-o", label=r"$\ell=" + str(int(alpha)) + r"$")
 
 
 ax.set_xlim(0,5)
@@ -77,5 +77,7 @@ ax.yaxis.set_minor_locator(MultipleLocator(0.05))
 # ax.set_ylim(0,1)
 
 
-plt.savefig(os.path.join(folder, file_name + '.pdf'), bbox_inches='tight')
-plt.close()
+plt.show()
+
+# plt.savefig(os.path.join(folder, file_name + '.pdf'), bbox_inches='tight')
+# plt.close()

@@ -30,7 +30,7 @@ gamma_list = [0.0,0.2,0.5,0.0]
 bins = 20
 t = format(20.0, '.6f')
 
-color_dict = {'d': 'blue', 'r': 'red', 't': 'black'}
+color_dict = {'d': 'tab:blue', 'r': 'tab:red', 't': 'black'}
 symbol_dict = {'d': 'o', 'r': 's', 't': '^'}
 legend_dict = {'d': r'$P_D(x)$', 'r': r'$P_R(x)$', 't': r'$P(x)$'}
 
