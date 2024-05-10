@@ -1,0 +1,29 @@
+#PBS -m abe
+#PBS -N RR
+#PBS -q standard
+#PBS -t 0-35
+
+#PBS -o output/$PBS_JOBNAME.o$PBS_JOBID
+#PBS -e output/$PBS_JOBNAME.e$PBS_JOBID
+
+num_d=9
+
+l=4.0
+
+k_arr=(1.0 2.0 3.0 4.0)
+k=${k_arr[$(($PBS_ARRAYID / $num_d))]}
+k=4.0
+
+d_arr=($(seq 0.1 0.1 0.9))
+d=${d_arr[$(($PBS_ARRAYID % $num_d))]}
+
+x0=0
+dt=0.0001
+dt_save=100.0
+t=100.0
+samples=$((10 ** 5))
+seed=1
+
+cd $PBS_O_WORKDIR
+bash run_hpc.sh $l $k $d $x0 $dt $dt_save $t $samples $seed
+

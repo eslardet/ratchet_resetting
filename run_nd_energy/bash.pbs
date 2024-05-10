@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -lwalltime=72:00:00
+#PBS -lselect=1:ncpus=1:mem=1gb
+#PBS -N RR_energy_l4
+#PBS -J 0-35
+
+#PBS -o output/
+#PBS -e output/
+
+num_d=9
+
+l=4.0
+
+k_arr=(1.0 2.0 3.0 4.0)
+k=${k_arr[$(($PBS_ARRAY_INDEX / $num_d))]}
+k=4.0
+
+d_arr=($(seq 0.1 0.1 0.9))
+d=${d_arr[$(($PBS_ARRAY_INDEX % $num_d))]}
+
+x0=0
+dt=0.0001
+dt_save=100.0
+t=100.0
+samples=$((10 ** 5))
+seed=1
+
+cd $PBS_O_WORKDIR
+bash run_hpc.sh $l $k $d $x0 $dt $dt_save $t $samples $seed
+
+
