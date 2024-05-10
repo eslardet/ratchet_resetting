@@ -189,14 +189,19 @@ def read_csv(filename):
     """
     folder = os.path.abspath('./analytical_data/')
     file = os.path.join(folder, filename)
+    if not os.path.exists(file):
+        raise ValueError("File does not exist: " + file)
     x_plot = []
     y_plot = []
-    with open(file) as f:
-        reader = csv.reader(f, delimiter=",")
-        for line in reader:
-            x_plot.append(float(line[0]))
-            y_plot.append(float(line[1]))
-    
+    try:
+        with open(file) as f:
+            reader = csv.reader(f, delimiter=",")
+            for line in reader:
+                x_plot.append(float(line[0]))
+                y_plot.append(float(line[1]))
+    except:
+        raise ValueError("Error reading file: " + file)
+        
     return np.array(x_plot), np.array(y_plot)
 
 def plot_csv(filename, ax=None):
