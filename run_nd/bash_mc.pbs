@@ -1,7 +1,7 @@
 #PBS -m abe
 #PBS -N RR_test
 #PBS -q standard
-##PBS -t 10-14
+#PBS -t 10-14
 
 #PBS -o output/$PBS_JOBNAME.o$PBS_JOBID
 #PBS -e output/$PBS_JOBNAME.e$PBS_JOBID
@@ -21,3 +21,4 @@ seed=1
 
 cd $PBS_O_WORKDIR
 bash run_hpc.sh $L $a $h $D $r $x0 $dt $dt_save $t $samples $seed
+
