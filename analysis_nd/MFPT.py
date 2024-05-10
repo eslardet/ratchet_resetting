@@ -69,7 +69,7 @@ for i, d in enumerate(d_list):
 
 
 ax.set_xlabel(r'$\tilde{x}$', labelpad=10)
-ax.set_ylabel(r'$\tilde{T}_R$', labelpad=10)
+ax.set_ylabel(r'$\tilde{T}_R(\tilde{x})$', labelpad=10)
 
 custom_lines = [plt.Line2D([0], [0], marker='^', markersize=10, color="tab:blue"),
                  plt.Line2D([0], [0], marker='s', markersize=10, color="tab:orange")]
