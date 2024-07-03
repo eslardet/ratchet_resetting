@@ -1,4 +1,0 @@
-#!/bin/sh
-
-## For simulation data only
-rsync -rvltoD el2021@macomp001.ma.ic.ac.uk:/home/clustor2/ma/e/el2021/ratchet_resetting/simulation_data /Users/el2021/Code/ratchet_resetting
