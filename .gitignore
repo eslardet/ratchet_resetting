@@ -7,10 +7,12 @@ __pycache__/
 .vscode/
 simulation_data/
 simulation_data_mfpt/
+simulation_data_stop_start/
 plots/
 old/
 analytical_data/
 Densities/
+sync/
 
 # Ignore files with a specific extension
 *.dSYM
