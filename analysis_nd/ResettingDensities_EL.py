@@ -30,14 +30,15 @@ gamma_list = [0.0,0.2,0.5,0.0]
 bins = 20
 t = format(20.0, '.6f')
 
-color_dict = {'d': 'tab:blue', 'r': 'tab:red', 't': 'black'}
+color_dict = {'d': 'blue', 'r': 'red', 't': 'black'}
 symbol_dict = {'d': 'o', 'r': 's', 't': '^'}
-legend_dict = {'d': r'$P_D(x)$', 'r': r'$P_R(x)$', 't': r'$P(x)$'}
+legend_dict = {'d': r'$\tilde{P}_D(\tilde{x})$', 'r': r'$\tilde{P}_R(\tilde{x})$', 't': r'$\tilde{P}(\tilde{x})$'}
 
 
 fig, axs = plt.subplots(2,2, figsize=(24,16))
+# fig, axs = plt.subplots(figsize=(24,16))
 
-
+# i = 3
 for i, ax in enumerate(fig.axes):
     alpha = alpha_list[i]
     beta = beta_list[i]
@@ -49,6 +50,7 @@ for i, ax in enumerate(fig.axes):
         filename = 'P_{}_alpha{}_beta{}_gamma{}.csv'.format(phase, alpha, beta, gamma_analytical)
         x_plot, y_plot = read_csv(filename)
         ax.plot(x_plot/alpha, y_plot, color=color_dict[phase], label = legend_dict[phase])
+        # ax.plot(x_plot, y_plot, color=color_dict[phase], label = legend_dict[phase], linewidth = 5)
 
     ## Numerical ##
     x_all = []
@@ -60,7 +62,7 @@ for i, ax in enumerate(fig.axes):
 
     hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
     bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])/alpha
-    ax.scatter(bin_centers, hist*alpha, color=color_dict['t'], s=markersize, marker=symbol_dict['t'], label = legend_dict['t'] + " (simulation)")
+    ax.scatter(bin_centers, hist, color=color_dict['t'], s=markersize, marker=symbol_dict['t'], label = legend_dict['t'] + " (simulation)")
 
     for phase in ['d', 'r']:
         pos_file = get_pos_file(alpha, beta, gamma, t, phase)
@@ -70,14 +72,14 @@ for i, ax in enumerate(fig.axes):
         # ax.hist(x_all, bins=100, density=True)
         hist, bin_edges = np.histogram(x, bins=bins, density=True)
         bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])/alpha
-        ax.scatter(bin_centers, hist*prob*alpha, color=color_dict[phase], s=markersize, marker=symbol_dict[phase], label = legend_dict[phase] + " (simulation)")
+        ax.scatter(bin_centers, hist*prob, color=color_dict[phase], s=markersize, marker=symbol_dict[phase], label = legend_dict[phase] + " (simulation)")
 
 
     ## General plotting ##
     ax.text(-0.12, 0.96, labels[i], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
     
     ax.xaxis.set_minor_locator(MultipleLocator(0.05))
-    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$L/4$", r"$L/2$", r"$3L/4$", r"$L$"])
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$\ell/4$", r"$\ell/2$", r"$3\ell/4$", r"$\ell$"])
     ax.yaxis.set_minor_locator(MultipleLocator(0.05))
     ax.yaxis.set_major_locator(MultipleLocator(0.2))
 
@@ -87,8 +89,8 @@ for i, ax in enumerate(fig.axes):
     ax.tick_params(which = 'major', length = 6)
     ax.tick_params(which = 'minor', length = 3)
     
-    ax.set_xlabel(r'$x$')
-    ax.set_ylabel(r'$P(x), P_D(x), P_R(x)$', labelpad=10)
+    ax.set_xlabel(r'$\tilde{x}$')
+    ax.set_ylabel(r'$\tilde{P}(\tilde{x}), \tilde{P}_D(\tilde{x}), \tilde{P}_R(\tilde{x})$', labelpad=10)
 
     ax.set_xlim(0, 1)
     ax.set_ylim(bottom=0)
@@ -103,6 +105,6 @@ plt.tight_layout()
 folder = os.path.abspath('./plots/density/')
 if not os.path.exists(folder):
     os.makedirs(folder)
-plt.savefig(folder + '/density_alpha{}_beta{}_gamma{}.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
+plt.savefig(folder + '/density_alpha{}_beta{}_gamma{}_new.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
 
 # plt.show()

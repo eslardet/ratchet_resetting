@@ -5,14 +5,14 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 
-def get_pos_file(alpha, beta, gamma, t, phase):
+def get_pos_file(ell, kappa, delta, t, phase, model='v1'):
     """
     Get path as string to position file for given parameters and time
 
     Input
-    alpha : alpha value
-    beta : beta value
-    gamma : gamma value
+    ell : ell value
+    kappa : kappa value
+    delta : delta value
     t : time
     phase : 'd' or 'r'
 
@@ -20,7 +20,10 @@ def get_pos_file(alpha, beta, gamma, t, phase):
     sim_dir : path to position file
     """
 
-    sim_dir = os.path.abspath('./simulation_data/alpha{}_beta{}_gamma{}'.format(alpha, beta, gamma)) 
+    if model == 'v1':
+        sim_dir = os.path.abspath('./simulation_data/alpha{}_beta{}_gamma{}'.format(ell, kappa, delta)) 
+    elif model == 'v2':
+        sim_dir = os.path.abspath('./simulation_data_stop_start/alpha{}_beta{}_gamma{}'.format(ell, kappa, delta))
 
     pos_file = os.path.join(sim_dir, phase + '_pos_' + str(t))
     return pos_file
@@ -66,10 +69,10 @@ def read_pos(file_name):
 
     return np.array(x_all)
 
-def get_prob_phase(alpha, beta, gamma, t, phase='r'):
-    pos_file_d = get_pos_file(alpha, beta, gamma, t, phase='d')
+def get_prob_phase(ell, kappa, delta, t, phase='r', model="v1"):
+    pos_file_d = get_pos_file(ell, kappa, delta, t, phase='d', model=model)
     x_all_d = read_pos(pos_file_d)
-    pos_file_r = get_pos_file(alpha, beta, gamma, t, phase='r')
+    pos_file_r = get_pos_file(ell, kappa, delta, t, phase='r', model=model)
     x_all_r = read_pos(pos_file_r)
 
     prob_d = len(x_all_d)/(len(x_all_d) + len(x_all_r))
@@ -80,24 +83,24 @@ def get_prob_phase(alpha, beta, gamma, t, phase='r'):
     elif phase == 'r':
         return prob_r
 
-def plot_pos_phase(alpha, beta_arr, gamma_arr, t_arr, phase, bins=20, save_plot=False, show_plot=True):
+def plot_pos_phase(ell, kappa_arr, delta_arr, t_arr, phase, bins=20, save_plot=False, show_plot=True):
     """
     Plot position of particle over time/ array of a or r values for a certain phase
     """
-    fig, ax = initalize_plotting(cols='continuous', num=len(beta_arr)*len(gamma_arr)*len(t_arr))
-    for beta in beta_arr:
-        for gamma in gamma_arr:
+    fig, ax = initalize_plotting(cols='continuous', num=len(kappa_arr)*len(delta_arr)*len(t_arr))
+    for kappa in kappa_arr:
+        for delta in delta_arr:
             for t in t_arr:
-                pos_file = get_pos_file(alpha, beta, gamma, t, phase)
+                pos_file = get_pos_file(ell, kappa, delta, t, phase)
                 x_all = read_pos(pos_file)
 
-                prob = get_prob_phase(alpha, beta, gamma, t, phase)
+                prob = get_prob_phase(ell, kappa, delta, t, phase)
                 # ax.hist(x_all, bins=100, density=True)
                 hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
                 bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-                ax.plot(bin_centers, prob*hist, label=r'$\beta={beta},\  \gamma={gamma},\ t={t}$'.format(beta=beta, gamma=gamma, t=str(float(t))))
+                ax.plot(bin_centers, prob*hist, label=r'$\kappa={kappa},\  \delta={delta},\ t={t}$'.format(kappa=kappa, delta=delta, t=str(float(t))))
 
-    ax.set_xlim(0,alpha)
+    ax.set_xlim(0,ell)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$P_' + phase + r'(x)$')
     ax.legend()
@@ -106,13 +109,13 @@ def plot_pos_phase(alpha, beta_arr, gamma_arr, t_arr, phase, bins=20, save_plot=
         folder = os.path.abspath('./plots/density/')
         if not os.path.exists(folder):
             os.makedirs(folder)
-        file_name = os.path.join(folder, phase + '_alpha{}_beta{}_gamma{}.pdf'.format(alpha, beta, gamma))
+        file_name = os.path.join(folder, phase + '_ell{}_kappa{}_delta{}.pdf'.format(ell, kappa, delta))
         plt.savefig(file_name, bbox_inches='tight')
         plt.close()
     if show_plot:
         plt.show()
 
-def plot_pos_both(alpha, beta, gamma, t, bins=20, save_plot=False, show_plot=True):
+def plot_pos_both(ell, kappa, delta, t, bins=20, save_plot=False, show_plot=True):
     """
     Plot position of particle over time for each phase
     """
@@ -120,17 +123,17 @@ def plot_pos_both(alpha, beta, gamma, t, bins=20, save_plot=False, show_plot=Tru
     fig, ax = initalize_plotting(cols='discrete')
 
     for phase in ['d', 'r']:
-        pos_file = get_pos_file(alpha, beta, gamma, t, phase)
+        pos_file = get_pos_file(ell, kappa, delta, t, phase)
         x_all = read_pos(pos_file)
         
-        prob = get_prob_phase(alpha, beta, gamma, t, phase)
+        prob = get_prob_phase(ell, kappa, delta, t, phase)
         # ax.hist(x_all, bins=100, density=True)
         hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
         bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
         ax.plot(bin_centers, prob*hist, label="Phase " + phase)
 
 
-    ax.set_title(r'$\alpha={alpha}, \ \beta={beta}, \gamma={gamma} \ t={t}$'.format(alpha=alpha, beta=beta, gamma=gamma, t=str(float(t))))
+    ax.set_title(r'$\ell={ell}, \ \kappa={kappa}, \delta={delta} \ t={t}$'.format(ell=ell, kappa=kappa, delta=delta, t=str(float(t))))
     ax.set_xlim(0,1)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$P(x)$')
@@ -140,31 +143,31 @@ def plot_pos_both(alpha, beta, gamma, t, bins=20, save_plot=False, show_plot=Tru
         folder = os.path.abspath('./plots/density/')
         if not os.path.exists(folder):
             os.makedirs(folder)
-        file_name = os.path.join(folder, 'both_alpha{}_beta{}_gamma{}_t{}.pdf'.format(alpha, beta, gamma, t))
+        file_name = os.path.join(folder, 'both_ell{}_kappa{}_delta{}_t{}.pdf'.format(ell, kappa, delta, t))
         plt.savefig(file_name, bbox_inches='tight')
         plt.close()
     if show_plot:
         plt.show()
 
-def plot_pos_total(alpha, beta_arr, gamma_arr, t_arr, bins=20, save_plot=False, show_plot=True):
+def plot_pos_total(ell, kappa_arr, delta_arr, t_arr, bins=20, save_plot=False, show_plot=True):
     """
     Plot position of particle over time (combined phases)
     """
 
-    fig, ax = initalize_plotting(cols='continuous', num=len(beta_arr)*len(gamma_arr)*len(t_arr))
-    for beta in beta_arr:
-        for gamma in gamma_arr:
+    fig, ax = initalize_plotting(cols='continuous', num=len(kappa_arr)*len(delta_arr)*len(t_arr))
+    for kappa in kappa_arr:
+        for delta in delta_arr:
             for t in t_arr:
-                pos_file_d = get_pos_file(alpha, beta, gamma, t, 'd')
+                pos_file_d = get_pos_file(ell, kappa, delta, t, 'd')
                 x_all_d = read_pos(pos_file_d)
-                pos_file_r = get_pos_file(alpha, beta, gamma, t, 'r')
+                pos_file_r = get_pos_file(ell, kappa, delta, t, 'r')
                 x_all_r = read_pos(pos_file_r)
                 x_all = np.concatenate((x_all_d, x_all_r))
                 # ax.hist(x_all, bins=100, density=True)
 
                 hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
                 bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])
-                ax.plot(bin_centers, hist, label=r'$\beta=$' + str(beta) + r'$\gamma=$' + str(gamma) + r'$t=$' + str(t))
+                ax.plot(bin_centers, hist, label=r'$\kappa=$' + str(kappa) + r'$\delta=$' + str(delta) + r'$t=$' + str(t))
 
     ax.set_xlim(0,1)
     ax.set_xlabel(r'$x$')
@@ -175,7 +178,7 @@ def plot_pos_total(alpha, beta_arr, gamma_arr, t_arr, bins=20, save_plot=False, 
         folder = os.path.abspath('./plots/density/')
         if not os.path.exists(folder):
             os.makedirs(folder)
-        file_name = os.path.join(folder, 'joint_alpha{}_beta{}_gamma{}_t{}.pdf'.format(alpha, beta, gamma, t))
+        file_name = os.path.join(folder, 'joint_ell{}_kappa{}_delta{}_t{}.pdf'.format(ell, kappa, delta, t))
         plt.savefig(file_name, bbox_inches='tight')
         plt.close()
     if show_plot:
@@ -183,11 +186,14 @@ def plot_pos_total(alpha, beta_arr, gamma_arr, t_arr, bins=20, save_plot=False, 
 
 
 
-def read_csv(filename):
+def read_csv(filename, model='v1'):
     """
     Read csv output for plotting
     """
-    folder = os.path.abspath('./analytical_data/')
+    if model == 'v1':
+        folder = os.path.abspath('./analytical_data/')
+    elif model == 'v2':
+        folder = os.path.abspath('./analytical_data_stop_start/')
     file = os.path.join(folder, filename)
     if not os.path.exists(file):
         raise ValueError("File does not exist: " + file)
@@ -218,19 +224,19 @@ def plot_csv(filename, ax=None):
     
     return ax
 
-def plot_compare(alpha, beta, gamma, t, phase, bins=20, ax=None):
+def plot_compare(ell, kappa, delta, t, phase, bins=20, ax=None):
     """
     Plot analytical and simulation data
     """
-    filename = 'P_alpha{}_beta{}_gamma{}_t{}.csv'.format(phase, alpha, beta, gamma, t)
+    filename = 'P_ell{}_kappa{}_delta{}_t{}.csv'.format(phase, ell, kappa, delta, t)
     x_plot, y_plot = read_csv(filename)
     if ax is None:
         fig, ax = initalize_plotting()
     ax.plot(x_plot, y_plot, label='Analytical')
 
-    pos_file = get_pos_file(alpha, beta, gamma, t, phase)
+    pos_file = get_pos_file(ell, kappa, delta, t, phase)
     x_all = read_pos(pos_file)
-    prob = get_prob_phase(alpha, beta, gamma, t, phase)
+    prob = get_prob_phase(ell, kappa, delta, t, phase)
     
     hist, bin_edges = np.histogram(x_all, bins=bins, density=True)
     bin_centers = 0.5*(bin_edges[1:]+bin_edges[:-1])

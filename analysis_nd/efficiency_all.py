@@ -14,6 +14,7 @@ import matplotlib
 import pickle
 from matplotlib.lines import Line2D
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.colors as colors
 from pylab import meshgrid,cm,imshow,contour,clabel,colorbar,axis,title,show
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from sympy.parsing.mathematica import parse_mathematica
@@ -208,22 +209,29 @@ def CurrentScript_DeltaKappa(l):
 ###############################################################################
 
 k_list_kl, l_list_kl, J_list_kl = CurrentScript_KappaEll(0.2)
-d_list_dl, l_list_dl, J_list_dl = CurrentScript_DeltaEll(4.001)
-d_list_dk, k_list_dk, J_list_dk = CurrentScript_DeltaKappa(4.001)
+d_list_dl, l_list_dl, J_list_dl = CurrentScript_DeltaEll(1.001)
+d_list_dk, k_list_dk, J_list_dk = CurrentScript_DeltaKappa(1.501)
+
+all_max_eta = []
 
 #(a) kappa vs delta
 max_eta = np.where(J_list_dk == np.nanmax(J_list_dk))
+all_max_eta.append(np.nanmax(J_list_dk))
 print('The maximum efficiency in (a) is', np.nanmax(J_list_dk), 'at kappa =', k_list_dk[max_eta[0][0]][max_eta[1][0]], 'and delta =', d_list_dk[max_eta[0][0]][max_eta[1][0]])
 
-print(Efficiency(4, 8.4, 0.0001))
+# print(Efficiency(4, 8.4, 0.0001))
+print(Efficiency(1.5, 5.9, 0.0001))
 
 #(b) ell vs delta
 max_eta = np.where(J_list_dl == np.nanmax(J_list_dl))
+all_max_eta.append(np.nanmax(J_list_dl))
 print('The maximum efficiency in (b) is', np.nanmax(J_list_dl), 'at ell =', l_list_dl[max_eta[0][0]][max_eta[1][0]], 'and delta =', d_list_dl[max_eta[0][0]][max_eta[1][0]])
-print(Efficiency(6.4, 4, 0.0001))
+# print(Efficiency(6.4, 4, 0.0001))
+print(Efficiency(5.7, 1, 0.0001))
 
 #(c) ell vs kappa
 max_eta = np.where(J_list_kl == np.nanmax(J_list_kl))
+all_max_eta.append(np.nanmax(J_list_kl))
 print('The maximum efficiency in (c) is', np.nanmax(J_list_kl), 'at kappa =', k_list_kl[max_eta[0][0]][max_eta[1][0]], 'and ell =', l_list_kl[max_eta[0][0]][max_eta[1][0]])
 print(Efficiency(5.1, 6.7, 0.2))
 
@@ -235,13 +243,15 @@ print(Efficiency(5.1, 6.7, 0.2))
 
 # 2D colour plot
 
+max_eta = np.max(all_max_eta)
+
 # define figure
 fig1 = plt.figure(1, figsize=(20,5))
 
 ax1 = fig1.add_subplot(131)
 
 # plot contour
-ratio_plot = ax1.pcolor(d_list_dk, k_list_dk, J_list_dk, cmap = 'viridis')# , norm=colors.LogNorm()
+ratio_plot = ax1.pcolor(d_list_dk, k_list_dk, J_list_dk, cmap = 'viridis', vmin=0, vmax=max_eta)
 
 # colorbar
 cbar = colorbar(ratio_plot, fraction = 0.045)
@@ -282,7 +292,7 @@ ax1.text(-0.25, 1.05, "(a)", size = 30, ha="left", va="top", transform=ax1.trans
 ax2 = fig1.add_subplot(132)
 
 # plot contour
-ratio_plot = ax2.pcolor(d_list_dl, l_list_dl, J_list_dl, cmap = 'viridis')# , norm=colors.LogNorm()
+ratio_plot = ax2.pcolor(d_list_dl, l_list_dl, J_list_dl, cmap = 'viridis', vmin=0, vmax=max_eta)
 
 # colorbar
 cbar = colorbar(ratio_plot, fraction = 0.045)
@@ -322,7 +332,7 @@ ax2.text(-0.25, 1.05, "(b)", size = 30, ha="left", va="top", transform=ax2.trans
 ax3 = fig1.add_subplot(133)
 
 # plot contour
-ratio_plot = ax3.pcolor(k_list_kl, l_list_kl, J_list_kl, cmap = 'viridis', vmin = 0)# , norm=colors.LogNorm()
+ratio_plot = ax3.pcolor(k_list_kl, l_list_kl, J_list_kl, cmap = 'viridis', vmin=0, vmax=max_eta)
 
 # colorbar
 cbar = colorbar(ratio_plot, fraction = 0.045)

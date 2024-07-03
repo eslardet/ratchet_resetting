@@ -103,7 +103,7 @@ print('Time taken: ', time.time() - t0)
 
 time_plot = np.linspace(0, total_t, len(time_arr))
 energy_analytic = energy_rate_analytic(ell, kappa, delta) * time_plot
-ax.plot(time_plot, energy_analytic, color='black', linestyle='--', alpha=0.8, label='Analytic', linewidth=4)
+ax.plot(time_plot, energy_analytic, color='black', linestyle='--', alpha=0.8, label='Analytic prediction', linewidth=4)
 
 
 ax.set_xlabel(r'$\tilde{t}$')
@@ -219,7 +219,7 @@ for i, ax in enumerate(fig.axes[1:]):
 
 custom_lines = [plt.Line2D([0], [0], marker=marker_list[i], markersize=10, color=colors[i]) for i in range(len(k_arr))]
 labels = [r"$\kappa=" + str(k) + "$" for k in k_arr]
-fig.legend(custom_lines, labels, frameon=False, loc="upper center", ncol=4, bbox_to_anchor=(0.75, 1.05))
+fig.legend(custom_lines, labels, frameon=False, loc="upper center", ncol=4, bbox_to_anchor=(0.76, 1.05))
 
 plt.tight_layout()
 

@@ -54,7 +54,7 @@ for i, ax in enumerate(fig.axes):
     ax.text(-0.12, 0.96, labels[i], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
     
     ax.xaxis.set_minor_locator(MultipleLocator(0.05))
-    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$L/4$", r"$L/2$", r"$3L/4$", r"$L$"])
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$\ell/4$", r"$\ell/2$", r"$3\ell/4$", r"$\ell$"])
     if i == 3:
         # ax.yaxis.set_minor_locator(MultipleLocator(0.1))
         ax.yaxis.set_major_locator(MultipleLocator(0.2))
@@ -68,23 +68,30 @@ for i, ax in enumerate(fig.axes):
     ax.tick_params(which = 'major', length = 6)
     ax.tick_params(which = 'minor', length = 3)
     
-    ax.set_xlabel(r'$x$')
-    ax.set_ylabel(r'$\tilde{J}, \tilde{J}_D(x), \tilde{J}_R(x)$', labelpad=10)
+    ax.set_xlabel(r'$\tilde{x}$')
+    ax.set_ylabel(r'$\tilde{J}, \tilde{J}_D(\tilde{x}), \tilde{J}_R(\tilde{x})$', labelpad=10)
 
     ax.set_xlim(0, 1)
     # ax.set_ylim(bottom=0)
 
     # ax.vlines(gamma, 0, 1.4, linestyle = 'dashed', alpha = 0.1, linewidth = 3.5, color = 'black')
 
-    ax.grid(True, alpha = 0.5)
+    # ax.grid(True, alpha = 0.5)
+    ax.vlines(0.5, -0.8, 0.8, linestyle = 'solid', alpha = 0.1, linewidth = 3.5, color = 'black')
+    ax.hlines(0, 0, 1.0, linestyle = 'solid', alpha = 0.1, linewidth = 3.5, color = 'black')
 
     ax.legend(frameon=False,  ncol=3, handletextpad=0.2, columnspacing = 0.7, loc="lower center")
+
+axs[0,0].set_ylim(-0.3, 0.3)
+axs[0,1].set_ylim(-0.3, 0.3)
+axs[1,0].set_ylim(-0.3, 0.3)
+axs[1,1].set_ylim(-0.8, 0.8)
 
 plt.tight_layout()
 
 folder = os.path.abspath('./plots/current/')
 if not os.path.exists(folder):
     os.makedirs(folder)
-plt.savefig(folder + '/alpha{}_beta{}_gamma{}.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
+plt.savefig(folder + '/alpha{}_beta{}_gamma{}_singlelines.pdf'.format(alpha, beta, gamma), bbox_inches='tight')
 
 # plt.show()

@@ -19,7 +19,7 @@ t_arr = [format(i, '.6f') for i in [0.1, 0.5, 1.0, 5.0]]
 # marker_list = ["o", "^", "s", "*", "D"]
 marker_list = ["^", "s", "*", "D"]
 
-legend_dict = {'d': r'$P_D(x)$', 'r': r'$P_R(x)$', 't': r'$P(x)$'}
+legend_dict = {'d': r'$\tilde{P}_D(\tilde{x})$', 'r': r'$\tilde{P}_R(\tilde{x})$', 't': r'$\tilde{P}(\tilde{x})$'}
 
 save_plot = True
 
@@ -54,6 +54,7 @@ for j in range(2):
 
     filename = 'P_{}_alpha{}_beta{}_gamma{}.csv'.format(phase, alpha, beta, gamma)
     x_plot, y_plot = read_csv(filename)
+    # ax.plot(x_plot/alpha, y_plot, color='k', linestyle="--", label = legend_dict[phase], linewidth=5, zorder=4)
     ax.plot(x_plot/alpha, y_plot, color='k', linestyle="--", label = legend_dict[phase], linewidth=5, zorder=4)
 
     for i, t in enumerate(t_arr):
@@ -80,9 +81,11 @@ for j in range(2):
         # bin_centers = bin_edges[:-1]
 
         # if t != "5.000000":
-        ax.plot(bin_centers/alpha, prob*hist*alpha, alpha=0.5, linewidth=5, zorder=2)
+        # ax.plot(bin_centers/alpha, prob*hist*alpha, alpha=0.5, linewidth=5, zorder=2)
+        ax.plot(bin_centers/alpha, prob*hist, alpha=0.5, linewidth=5, zorder=2)
 
-        ax.scatter(bin_centers/alpha, prob*hist*alpha, marker=marker_list[i], s=markersize, label=r'$t={t}$'.format(t=str(float(t))), zorder=3)
+        # ax.scatter(bin_centers/alpha, prob*hist*alpha, marker=marker_list[i], s=markersize, label=r'$\tilde{t}={t}$'.format(t=str(float(t))), zorder=3)
+        ax.scatter(bin_centers/alpha, prob*hist, marker=marker_list[i], s=markersize, label=r'$\tilde{t}=' + str(float(t)) + r"$", zorder=3)
 
         
 
@@ -91,24 +94,25 @@ for j in range(2):
     ax.text(-0.12, 0.96, labels[j], horizontalalignment='center', verticalalignment='center', transform=ax.transAxes)
 
     ax.set_xlim(0,1)
-    ax.set_xlabel(r'$x$')
+    ax.set_xlabel(r'$\tilde{x}$')
     if phase == "d":
-        ax.set_ylabel(r'$P_D(x,t)$', labelpad=20)
+        ax.set_ylabel(r'$\tilde{P}_D(\tilde{x},\tilde{t})$', labelpad=20)
     elif phase == "r":
-        ax.set_ylabel(r'$P_R(x,t)$', labelpad=20)
+        ax.set_ylabel(r'$\tilde{P}_R(\tilde{x},\tilde{t})$', labelpad=20)
     ax.legend(frameon=False)
 
     if phase == "d":
         ax.set_ylim(bottom=0)
-        ax.yaxis.set_minor_locator(MultipleLocator(0.1))
-        ax.yaxis.set_major_locator(MultipleLocator(0.5))
-    else:
-        ax.set_ylim(0,1.1)
         ax.yaxis.set_minor_locator(MultipleLocator(0.05))
-        ax.yaxis.set_major_locator(MultipleLocator(0.2))
+        ax.yaxis.set_major_locator(MultipleLocator(0.1))
+    else:
+        ax.set_ylim(0,0.3)
+        # ax.set_ylim(bottom=0)
+        ax.yaxis.set_minor_locator(MultipleLocator(0.05))
+        ax.yaxis.set_major_locator(MultipleLocator(0.1))
 
     ax.xaxis.set_minor_locator(MultipleLocator(0.05))
-    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$L/4$", r"$L/2$", r"$3L/4$", r"$L$"])
+    ax.set_xticks([0, 0.25, 0.5, 0.75, 1], [r"$0$", r"$\ell/4$", r"$\ell/2$", r"$3\ell/4$", r"$\ell$"])
 
 
 ax = axs[2]
@@ -140,8 +144,8 @@ for k in range(num_alpha):
 
 ax.set_xlim(0,5)
 ax.set_ylim(0.5, 1.0)
-ax.set_xlabel(r'$t$')
-ax.set_ylabel(r'$p_D(t)$', labelpad=10)
+ax.set_xlabel(r'$\tilde{t}$')
+ax.set_ylabel(r'$p_D(\tilde{t})$', labelpad=10)
 ax.legend(frameon=True, loc="upper right")
 
 
