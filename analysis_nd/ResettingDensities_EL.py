@@ -95,7 +95,7 @@ for i, ax in enumerate(fig.axes):
     ax.set_xlim(0, 1)
     ax.set_ylim(bottom=0)
 
-    ax.vlines(gamma, 0, 1.4, linestyle = 'dashed', alpha = 0.1, linewidth = 3.5, color = 'black')
+    ax.vlines(gamma, 0, 1.4, linestyle = 'dotted', alpha = 0.1, linewidth = 3.5, color = 'black')
 
     if i == 3:
         ax.legend(frameon=False, loc='center', ncol=2, handletextpad=0.2, columnspacing = 0.7)
