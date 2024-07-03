@@ -100,7 +100,7 @@ folder = 'plots/trajectory/'
 if not os.path.exists(folder):
     os.makedirs(folder)
 # filename = 'L{}_a{}_h{}_D{}_r{}_seed{}'.format(L, a, h, D, r, seed)
-filename = 'alpha{}_beta{}_gamma{}_seed{}'.format(alpha, beta, gamma, seed)
+filename = 'alpha{}_beta{}_gamma{}_seed{}_unwrapped'.format(alpha, beta, gamma, seed)
 # plt.savefig(folder + filename + '.pdf', bbox_inches='tight')
 
 plt.show()
