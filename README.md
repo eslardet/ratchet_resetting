@@ -1,4 +1,7 @@
-This repository contains code to run and analyse a stochastic resetting model with a ratchet potential.
+This repository contains code to run and analyse a stochastic resetting model mediated by a ratchet potential for the following paper: 
+*Roberts, Connor, Emir Sezik, and Eloise Lardet. "Ratchet-mediated resetting: Current, efficiency, and exact solution." arXiv preprint arXiv:2405.10698 (2024).*
+
+Please include the above citation if you reuse this code.
 
 Once compiled, the C++ code in `src` can be run using shell scripts in the `run` folder, or run on the HPC/ Cluster using the bash scripts. Ensure that you compile the source code locally on the machine where you will be running the code from.
 This program will generate position files at different time save points for phase `d` and phase `r` under the folder `simulation_data`.
