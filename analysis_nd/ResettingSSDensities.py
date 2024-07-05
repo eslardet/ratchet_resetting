@@ -100,7 +100,7 @@ ax.set_xlim(0, 1)
 ax.set_ylim(0, 1)
 
 
-ax.vlines(delta, 0, 1.4, linestyle = 'dashed', alpha = 0.1, linewidth = 3.5, color = 'black')
+ax.vlines(delta, 0, 1.4, linestyle = 'dotted', alpha = 0.1, linewidth = 3.5, color = 'black')
 
 # if i == 3:
 ax.legend(frameon=False, loc='upper center', ncol=2, handletextpad=0.2, columnspacing = 0.7)
