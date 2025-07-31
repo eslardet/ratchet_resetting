@@ -2,7 +2,7 @@
 
 This repository contains code to run and analyse a stochastic resetting model mediated by a ratchet potential for the following paper: 
 
-*Roberts, Connor, Emir Sezik, and Eloise Lardet. "Ratchet-mediated resetting: Current, efficiency, and exact solution." arXiv preprint arXiv:2405.10698 (2024).*
+*Roberts, Connor, Emir Sezik, and Eloise Lardet. "Ratchet-mediated resetting: Current, efficiency, and exact solution." J. Phys. A: Math. Theor. **57** 325001 (2024).*
 
 Please include the above citation if you reuse this code.
 
